@@ -1,0 +1,11 @@
+{
+	"recommendations": [
+		"jetpack-io.devbox",
+		"HashiCorp.terraform",
+		"Mineiros.terramate",
+		"redhat.ansible",
+		"redhat.vscode-yaml",
+		"yzhang.markdown-all-in-one",
+		"davidanson.vscode-markdownlint",
+	],
+}

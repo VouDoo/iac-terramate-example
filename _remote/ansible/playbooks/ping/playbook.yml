@@ -1,0 +1,7 @@
+---
+- name: Dies ist ein Test
+  hosts: all
+  gather_facts: false # let's not gather facts for nothing...
+  tasks:
+    - name: Play ping-pong
+      ansible.builtin.ping:

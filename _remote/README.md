@@ -1,0 +1,3 @@
+# Remote directory
+
+Let's pretend the files stored under this directory are hosted in remote repositories...

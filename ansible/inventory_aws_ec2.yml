@@ -1,0 +1,13 @@
+---
+plugin: amazon.aws.aws_ec2
+regions:
+  - eu-west-3 # Ici, c'est Paris !
+filters:
+  instance-state-name: running
+keyed_groups:
+  - key: tags.ansible_groups.split(',')
+hostnames:
+  - tag:Name
+compose:
+  ansible_host: public_dns_name
+  ansible_ssh_user: tags.ansible_remote_user

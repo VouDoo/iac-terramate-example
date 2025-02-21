@@ -1,0 +1,59 @@
+version: "3"
+
+tasks:
+  init:
+    desc: Prepare working environment.
+    deps:
+      - ansible-init
+      - generate-key
+  generate-key:
+    desc: Generate SSH key pair.
+    preconditions:
+      # only run if ".keypair" directory does not exist
+      - test ! -d .keypair
+    cmds:
+      - mkdir -p .keypair
+      - ssh-keygen -t ed25519 -f .keypair/ed25519_key -N "" -C "(Creation datetime $(date --rfc-3339=seconds))"
+  tm-generate:
+    desc: Run Terramate code generation in stacks.
+    cmds:
+      - terramate generate
+  tm-init:
+    desc: Prepare Terraform directories by running Terraform init operation with Terramate.
+    cmds:
+      - mkdir -p .terraform_cache
+      - terramate run -- terraform init
+  tm-plan:
+    desc: Show changes by running Terraform plan operation with Terramate.
+    cmds:
+      - terramate run -- terraform plan
+  tm-apply:
+    desc: Create or update infrastructure by running Terraform apply operation with Terramate.
+    cmds:
+      - terramate run --parallel 5 -- terraform apply -auto-approve
+  tm-destroy:
+    desc: Destroy previously-created infrastructure by running Terraform destroy operation with Terramate.
+    cmds:
+      - terramate run --parallel 5 -- terraform destroy -auto-approve
+  ansible-init:
+    desc: Install Ansible requirements.
+    cmds:
+      - pip install -r ansible/requirements.txt
+      - ansible-galaxy install -r ansible/requirements.yml
+  ansible-inventory:
+    desc: Render Ansible inventory as a list.
+    cmds:
+      - ansible-inventory --list
+  ansible-ping:
+    desc: Run ping Ansible playbook to test remote hosts.
+    cmds:
+      - ansible-playbook _remote/ansible/playbooks/ping/playbook.yml
+  format:
+    desc: Format files.
+    cmds:
+      - terraform fmt -recursive
+      - terramate fmt
+  clean:
+    desc: Remove cached files.
+    cmds:
+      - terramate run --parallel 5 -- rm -fr .terraform
