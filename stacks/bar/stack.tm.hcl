@@ -5,10 +5,9 @@ stack {
 }
 
 import {
-  source = "/modules/instance_solo/module.tm.hcl"
+  source = "/modules/instance/module.tm.hcl"
 }
 
 globals {
-  instance_name  = "bar"
   ansible_groups = ["bar"]
 }

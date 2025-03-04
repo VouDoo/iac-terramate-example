@@ -4,10 +4,14 @@ regions:
   - eu-west-3 # Ici, c'est Paris !
 filters:
   instance-state-name: running
+include_filters:
+  - tag:managed_by:
+      - "terraform"
 keyed_groups:
-  - key: tags.ansible_groups.split(',')
+  - key: tags.groups.split(',')
+leading_separator: false
 hostnames:
   - tag:Name
 compose:
   ansible_host: public_dns_name
-  ansible_ssh_user: tags.ansible_remote_user
+  ansible_ssh_user: tags.ec2_default_user

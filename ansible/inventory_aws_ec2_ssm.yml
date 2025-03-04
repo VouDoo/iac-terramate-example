@@ -1,0 +1,22 @@
+---
+# This is an example inventory that uses AWS SSM to connect to EC2 instances.
+# To use it, replace the `inventory_aws_ec2.yml` file with this one.
+plugin: amazon.aws.aws_ec2
+regions:
+  - eu-west-3 # Ici, c'est Paris !
+filters:
+  instance-state-name: running
+include_filters:
+  - tag:managed_by:
+      - "terraform"
+keyed_groups:
+  - key: tags.groups.split(',')
+leading_separator: false
+hostnames:
+  - tag:Name
+compose:
+  ansible_host: instance_id
+  ansible_connection: '"community.aws.aws_ssm"'
+  ansible_aws_ssm_region: '"eu-west-3"'
+  ansible_aws_ssm_bucket_name: '"ssm-bucket-0123456789"'
+use_ssm_inventory: true

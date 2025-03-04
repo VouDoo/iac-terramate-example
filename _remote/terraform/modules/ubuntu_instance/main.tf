@@ -1,42 +1,33 @@
-data "aws_ami" "ubuntu" {
-  most_recent = true
-  owners      = ["099720109477"] # Canonical
-
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
+resource "aws_security_group" "this" {
+  name        = "${var.name}-sg"
+  description = "Security group dedicated to ${var.name} instance"
+  vpc_id      = data.aws_vpc.selected.id
 }
 
-resource "aws_security_group" "this" {
-  name = "${var.name}-sg"
+resource "aws_vpc_security_group_ingress_rule" "allow_ssh_ipv4" {
+  count = var.allow_ssh ? 1 : 0
 
-  ingress {
-    description = "ssh"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  description       = "Allow SSH port"
+  security_group_id = aws_security_group.this.id
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port         = 22
+  ip_protocol       = "tcp"
+  to_port           = 22
 }
 
 resource "aws_instance" "this" {
   ami           = data.aws_ami.ubuntu.id
-  instance_type = "t3.micro"
+  instance_type = var.type
+  subnet_id     = var.subnet_id
   key_name      = var.key_name
-  security_groups = [
-    aws_security_group.this.name,
-    "default"
+
+  vpc_security_group_ids = [
+    aws_security_group.this.id
   ]
 
-  tags = {
-    Name                = var.name
-    ansible_remote_user = "ubuntu"
-    ansible_groups      = join(",", var.ansible_groups)
-  }
+  tags = merge(var.extra_tags, {
+    Name             = var.name
+    ec2_default_user = "ubuntu"
+    groups           = join(",", var.groups)
+  })
 }

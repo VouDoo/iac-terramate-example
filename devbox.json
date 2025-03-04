@@ -13,5 +13,6 @@
       ". $VENV_DIR/bin/activate"
     ],
     "scripts": {}
-  }
+  },
+  "env_from": ".env"
 }

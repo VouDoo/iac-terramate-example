@@ -13,4 +13,6 @@ Now, you can list all the available predefined tasks with the `task` command.
 
 Run `task init` first to install all the necessary prerequisites.
 
+You can set up your environment variables in a `.env` file (e.g., for AWS CLI credentials), and DevBox will automatically apply them when starting the shell.
+
 *Happy DevOps!*

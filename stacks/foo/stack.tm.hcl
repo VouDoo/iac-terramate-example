@@ -5,10 +5,9 @@ stack {
 }
 
 import {
-  source = "/modules/instance_duo/module.tm.hcl"
+  source = "/modules/instance/module.tm.hcl"
 }
 
 globals {
-  instance_basename = "foo"
-  ansible_groups    = ["foo"]
+  ansible_groups = ["foo"]
 }
