@@ -38,7 +38,7 @@ generate_hcl "_terramate_generated_instance.tf" {
       subnet_id = data.aws_subnet_ids.default.ids[0] # Attach to the first default subnet
       key_name  = aws_key_pair.this.key_name
       allow_ssh = true
-      groups    = global.ansible_groups # groups to be used by Ansible
+      groups    = global.ansible_groups
       extra_tags = {
         managed_by = "terraform"
       }
